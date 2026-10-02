@@ -161,7 +161,7 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
           });
         }
       });
-      carouselStageEl.style.height = s.sh + 'px';
+      if (carouselStageEl) carouselStageEl.style.height = s.h + 'px';
     }
 
     function getPositionForOffset(cardIndex, centerIndex, total) {
@@ -202,8 +202,8 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
       dotsContainer.appendChild(dot);
     });
 
-    document.getElementById('carouselNext').addEventListener('click', () => { next(); resetAuto(); });
-    document.getElementById('carouselPrev').addEventListener('click', () => { prev(); resetAuto(); });
+   document.getElementById('carouselNext')?.addEventListener('click', () => { next(); resetAuto(); });
+    document.getElementById('carouselPrev')?.addEventListener('click', () => { prev(); resetAuto(); });
 
     cards.forEach((card, i) => {
       card.addEventListener('click', () => {
@@ -216,12 +216,12 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
     function resetAuto() { stopAuto(); startAuto(); }
 
     const stage = document.getElementById('carouselStage');
-    stage.addEventListener('mouseenter', stopAuto);
-    stage.addEventListener('mouseleave', startAuto);
-
+    stage?.addEventListener('mouseenter', stopAuto);
+    stage?.addEventListener('mouseleave', startAuto);
+    
     let touchStartX = 0;
-    stage.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-    stage.addEventListener('touchend', e => {
+    stage?.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    stage?.addEventListener('touchend', e => {
       const diff = touchStartX - e.changedTouches[0].clientX;
       if (Math.abs(diff) > 40) { diff > 0 ? next() : prev(); resetAuto(); }
     });
@@ -236,21 +236,21 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
       const pip = document.createElement('div');
       pip.className = 'zoom-pip' + (i === zoomLevel ? ' active' : '');
       pip.addEventListener('click', () => setZoom(i));
-      zoomPipsEl.appendChild(pip);
+      zoomPipsEl?.appendChild(pip);
     });
 
     function setZoom(level) {
       zoomLevel = Math.max(0, Math.min(zoomSteps.length - 1, level));
       applyCardStyles(true); // suppress transition so width snaps, then transform animates
-      zoomPipsEl.querySelectorAll('.zoom-pip').forEach((p, i) => {
+      zoomPipsEl?.querySelectorAll('.zoom-pip').forEach((p, i) => {
         p.classList.toggle('active', i === zoomLevel);
       });
-      zoomOutBtn.disabled = zoomLevel === 0;
-      zoomInBtn.disabled  = zoomLevel === zoomSteps.length - 1;
+      if (zoomOutBtn) zoomOutBtn.disabled = zoomLevel === 0; 
+      if (zoomInBtn) zoomInBtn.disabled = zoomLevel === zoomSteps.length - 1;
     }
 
-    zoomInBtn.addEventListener('click',  () => setZoom(zoomLevel + 1));
-    zoomOutBtn.addEventListener('click', () => setZoom(zoomLevel - 1));
+    zoomInBtn?.addEventListener('click', () => setZoom(zoomLevel + 1));
+    zoomOutBtn?.addEventListener('click', () => setZoom(zoomLevel - 1));
 
     // Init
     updatePositions();
@@ -279,10 +279,17 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
       pricingToggle.setAttribute('aria-checked', isAnnual);
     }
 
+   if (pricingToggle) {
     pricingToggle.addEventListener('click', () => { isAnnual = !isAnnual; updatePricing(); });
+
     pricingToggle.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); isAnnual = !isAnnual; updatePricing(); }
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            isAnnual = !isAnnual;
+            updatePricing();
+        }
     });
+}
 
     /* ── FAQ ACCORDION ── */
     const faqItems = document.querySelectorAll('.faq-item');

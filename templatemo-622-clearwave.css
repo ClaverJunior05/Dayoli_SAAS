@@ -117,6 +117,14 @@ Free for personal and commercial use
       font-size: 1.25rem; font-weight: 700; letter-spacing: -0.04em;
       color: var(--text-1);
     }
+
+.nav-logo img {
+    width: 120px;
+    height: auto;
+    display: block;
+}
+
+
     .nav-logo span { color: var(--accent); }
     .nav-links {
       display: flex; align-items: center; gap: 36px;
